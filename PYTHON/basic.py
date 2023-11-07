@@ -168,6 +168,8 @@ class Lexer:
 class NumberNode:
 	def __init__(self, tok):
 		self.tok = tok
+		self.pos_start = self.tok.pos_start
+		self.pos_end = self.tok.pos_end
 
 	def __repr__(self):
 		return f'{self.tok}'
@@ -178,6 +180,9 @@ class BinOpNode:
 		self.op_tok = op_tok
 		self.right_node = right_node
 
+		self.pos_start = self.left_node.pos_start
+		self.pos_end = self.right_node.pos_end
+
 	def __repr__(self):
 		return f'({self.left_node}, {self.op_tok}, {self.right_node})'
 
@@ -185,6 +190,8 @@ class UnaryOpNode:
 	def __init__(self, op_tok, node):
 		self.op_tok = op_tok
 		self.node = node
+		self.pos_start = self.op_tok.pos_start
+		self.pos_end = node.pos_end
 
 	def __repr__(self):
 		return f'({self.op_tok}, {self.node})'
@@ -345,9 +352,24 @@ class Interpreter:
 		left = self.visit(node.left_node)
 		right = self.visit(node.right_node)
 
+		if node.op_tok.type == TT_PLUS:
+			result = left.added_to(right)
+		if node.op_tok.type == TT_MINUS:
+			result = left.subbed_by(right)
+		if node.op_tok.type == TT_MUL:
+			result = left.multed_by(right)
+		if node.op_tok.type == TT_DIV:
+			result = left.divided_by(right)
+
+		return result.set_pos(node.pos_start, node.pos_end)
+	
 	def visit_UnaryOpNode(self, node):
-		print("Found unary_op node!")
-		self.visit(node.node)
+		number = self.visit(node.node)
+
+		if node.op_tok.type == TT_MINUS:
+			number = number.multed_by(Number(-1))
+
+		return number.set_pos(node.pos_start, node.pos_end)
 #######################################
 # RUN
 #######################################
@@ -367,7 +389,7 @@ def run(fn, text):
 		
 		#run the prog
 		interpreter = Interpreter()
-		interpreter.visit(ast.node)
+		result = interpreter.visit(ast.node)
 
 		#return ast.node, ast.error
-		return None, None
+		return result, None
