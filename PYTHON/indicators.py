@@ -1,4 +1,4 @@
-def string_with_arrows(text, pos_start, pos_end):
+def indicators(text, pos_start, pos_end):
     result = ''
 
     # Calculate indices
