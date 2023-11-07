@@ -1,3 +1,4 @@
+import indicators
 
 DIGITS = '0123456789'
 #errors
@@ -11,15 +12,22 @@ class Error:
     def as_string(self):
         result = f'{self.error_name}: {self.details}\n'
         result += f'File {self.pos_start.fn}, line {self.pos_start.ln + 1}'
+        result += '\n\n' + indicators(self.pos_start.ftxt, self.pos_start, self.pos_end)
         return result
 
 class IllegalCharError(Error):
     def __init__(self, pos_start, pos_end, details):
         super().__init__(pos_start, pos_end, "Illegal Character", details)
 
-class ExpectedSemicolon(Error):
+class InvalidSyntaxError(Error):
     def __init__(self, pos_start, pos_end, details):
-        super().__init__(pos_start, pos_end, "Expected ';' ", details)
+        super().__init__(pos_start, pos_end, "Invalid Syntax", details)
+
+# used to catch semicolon errors
+'''class ExpectedSemicolon(Error):
+    def __init__(self, pos_start, pos_end, details):
+        super().__init__(pos_start, pos_end, "Expected ';' ", details)'''
+
 
 class Position:
     def __init__(self, idx, ln, col, fn, ftxt):
