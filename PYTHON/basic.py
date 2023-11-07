@@ -81,40 +81,40 @@ class Lexer:
         tokens = []
 
         
-        #try:
-        #while self.current_char != ";":
-        while self.current_char != ";":
-            if self.current_char in ' \t':
-                self.advance()
-            elif self.current_char in DIGITS:
-                tokens.append(self.make_number())
-            elif self.current_char == '+':
-                tokens.append(Token(TT_PLUS))
-                self.advance()
-            elif self.current_char == '-':
-                tokens.append(Token(TT_MINUS))
-                self.advance()
-            elif self.current_char == '*':
-                tokens.append(Token(TT_MUL))
-                self.advance()
-            elif self.current_char == '/':
-                tokens.append(Token(TT_DIV))
-                self.advance()
-            elif self.current_char == '(':
-                tokens.append(Token(TT_LPAREN))
-                self.advance()
-            elif self.current_char == ')':
-                tokens.append(Token(TT_RPAREN))
-                self.advance()
-            else:
-                pos_start = self.pos.copy()
-                char = self.current_char
-                self.advance()
-                return [], IllegalCharError(pos_start, self.pos, "'"+ char + "'")
-        
-        return tokens, None
-        #except:
-            #return [], ExpectedSemicolon(self.pos.copy(), self.pos, "woah! please add a semicolon at the end :]]")
+        try:
+            while self.current_char != ";":
+            #while self.current_char != ";":
+                if self.current_char in ' \t':
+                    self.advance()
+                elif self.current_char in DIGITS:
+                    tokens.append(self.make_number())
+                elif self.current_char == '+':
+                    tokens.append(Token(TT_PLUS))
+                    self.advance()
+                elif self.current_char == '-':
+                    tokens.append(Token(TT_MINUS))
+                    self.advance()
+                elif self.current_char == '*':
+                    tokens.append(Token(TT_MUL))
+                    self.advance()
+                elif self.current_char == '/':
+                    tokens.append(Token(TT_DIV))
+                    self.advance()
+                elif self.current_char == '(':
+                    tokens.append(Token(TT_LPAREN))
+                    self.advance()
+                elif self.current_char == ')':
+                    tokens.append(Token(TT_RPAREN))
+                    self.advance()
+                else:
+                    pos_start = self.pos.copy()
+                    char = self.current_char
+                    self.advance()
+                    return [], IllegalCharError(pos_start, self.pos, "'"+ char + "'")
+            
+            return tokens, None
+        except:
+            return [], ExpectedSemicolon(self.pos.copy(), self.pos, "woah! please add a semicolon at the end :]]")
         
             
     
